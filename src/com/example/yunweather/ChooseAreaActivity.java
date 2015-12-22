@@ -1,4 +1,4 @@
-package activity;
+package com.example.yunweather;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,6 @@ import model.YunWeatherDB;
 import util.HttpCallbackListener;
 import util.HttpUtil;
 import util.Utility;
-import android.R;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -23,6 +22,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.yunweather.R;
 
 public class ChooseAreaActivity extends Activity {
 	public static final int LEVEL_PROVINCE = 0;

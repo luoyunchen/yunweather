@@ -64,7 +64,7 @@ public class Utility {
 					county.setCountyName(array[1]);
 					county.setCityId(cityId);
 					// 将解析出来的数据存储到County表
-					coolWeatherDB.saveCounty(county);
+					yunWeatherDB.saveCounty(county);
 				}
 				return true;
 			}
