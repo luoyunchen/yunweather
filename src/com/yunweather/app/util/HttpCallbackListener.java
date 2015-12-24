@@ -1,4 +1,4 @@
-package util;
+package com.yunweather.app.util;
 
 public interface HttpCallbackListener {
 	void onFinish(String response);

@@ -1,4 +1,4 @@
-package model;
+package com.yunweather.app.model;
 
 public class Province {
 	private int id;

@@ -1,15 +1,19 @@
-package com.example.yunweather;
+package com.yunweather.app.activity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import model.City;
-import model.County;
-import model.Province;
-import model.YunWeatherDB;
-import util.HttpCallbackListener;
-import util.HttpUtil;
-import util.Utility;
+import com.example.yunweather.R;
+import com.example.yunweather.R.id;
+import com.example.yunweather.R.layout;
+import com.yunweather.app.model.City;
+import com.yunweather.app.model.County;
+import com.yunweather.app.model.Province;
+import com.yunweather.app.model.YunWeatherDB;
+import com.yunweather.app.util.HttpCallbackListener;
+import com.yunweather.app.util.HttpUtil;
+import com.yunweather.app.util.Utility;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;

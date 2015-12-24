@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.yunweather.ChooseAreaActivity"
+            android:name="com.yunweather.app.activity.ChooseAreaActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,13 +25,13 @@
             </intent-filter>
         </activity>
     
-        <service android:name="receiver.AutoUpdateReceiver">
+        <service android:name="com.yunweather.app.receiver.AutoUpdateReceiver">
         </service>
         
-        <service android:name="service.AutoUpdateService">
+        <service android:name="com.yunweather.app.service.AutoUpdateService">
         </service>
         
-		<activity android:name="com.example.yunweather.WeatherActivity">
+		<activity android:name="com.yunweather.app.activity.WeatherActivity">
 		</activity>
         
     </application>

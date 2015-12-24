@@ -1,6 +1,7 @@
-package receiver;
+package com.yunweather.app.receiver;
 
-import service.AutoUpdateService;
+import com.yunweather.app.service.AutoUpdateService;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

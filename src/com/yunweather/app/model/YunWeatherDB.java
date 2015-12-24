@@ -1,13 +1,14 @@
-package model;
+package com.yunweather.app.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.yunweather.app.db.YunWeatherOpenHelper;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import db.YunWeatherOpenHelper;
 
 public class YunWeatherDB {
 	/**

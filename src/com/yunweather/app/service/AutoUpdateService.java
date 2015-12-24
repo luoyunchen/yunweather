@@ -1,9 +1,10 @@
-package service;
+package com.yunweather.app.service;
 
-import receiver.AutoUpdateReceiver;
-import util.HttpCallbackListener;
-import util.HttpUtil;
-import util.Utility;
+import com.yunweather.app.receiver.AutoUpdateReceiver;
+import com.yunweather.app.util.HttpCallbackListener;
+import com.yunweather.app.util.HttpUtil;
+import com.yunweather.app.util.Utility;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;

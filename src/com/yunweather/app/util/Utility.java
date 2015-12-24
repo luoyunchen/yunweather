@@ -1,16 +1,17 @@
-package util;
+package com.yunweather.app.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import model.City;
-import model.County;
-import model.Province;
-import model.YunWeatherDB;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.yunweather.app.model.City;
+import com.yunweather.app.model.County;
+import com.yunweather.app.model.Province;
+import com.yunweather.app.model.YunWeatherDB;
 
 import android.content.Context;
 import android.content.SharedPreferences;
