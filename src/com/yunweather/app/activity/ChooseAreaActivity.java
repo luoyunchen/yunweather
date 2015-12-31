@@ -3,17 +3,6 @@ package com.yunweather.app.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.yunweather.R;
-import com.example.yunweather.R.id;
-import com.example.yunweather.R.layout;
-import com.yunweather.app.model.City;
-import com.yunweather.app.model.County;
-import com.yunweather.app.model.Province;
-import com.yunweather.app.model.YunWeatherDB;
-import com.yunweather.app.util.HttpCallbackListener;
-import com.yunweather.app.util.HttpUtil;
-import com.yunweather.app.util.Utility;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -29,6 +18,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.yunweather.app.R;
+import com.yunweather.app.model.City;
+import com.yunweather.app.model.County;
+import com.yunweather.app.model.Province;
+import com.yunweather.app.model.YunWeatherDB;
+import com.yunweather.app.util.HttpCallbackListener;
+import com.yunweather.app.util.HttpUtil;
+import com.yunweather.app.util.Utility;
 
 public class ChooseAreaActivity extends Activity {
 	public static final int LEVEL_PROVINCE = 0;
@@ -81,6 +79,10 @@ public class ChooseAreaActivity extends Activity {
 			finish();
 			return;
 		}
+		
+		Intent intent = new Intent(this, LocationActivity.class);
+		startActivity(intent);
+		finish();
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.choose_area);

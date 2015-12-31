@@ -1,12 +1,5 @@
 package com.yunweather.app.activity;
 
-import com.example.yunweather.R;
-import com.example.yunweather.R.id;
-import com.example.yunweather.R.layout;
-import com.yunweather.app.service.AutoUpdateService;
-import com.yunweather.app.util.HttpCallbackListener;
-import com.yunweather.app.util.HttpUtil;
-import com.yunweather.app.util.Utility;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,12 +7,20 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.yunweather.app.R;
+import com.yunweather.app.model.Location;
+import com.yunweather.app.service.AutoUpdateService;
+import com.yunweather.app.util.HttpCallbackListener;
+import com.yunweather.app.util.HttpUtil;
+import com.yunweather.app.util.Utility;
 
 public class WeatherActivity extends Activity implements OnClickListener{
 	private LinearLayout weatherInfoLayout;
@@ -57,6 +58,10 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	*/
 	private Button refreshWeather;
 	
+	private TextView LocationResult;
+	
+	private Location location;
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,6 +78,10 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		switchCity = (Button) findViewById(R.id.switch_city);
 		refreshWeather = (Button) findViewById(R.id.refresh_weather);
 		String countyCode = getIntent().getStringExtra("county_code");
+		
+		LocationResult = (TextView) findViewById(R.id.textView1);
+		LocationResult.setMovementMethod(ScrollingMovementMethod.getInstance());
+		
 		
 		if (!TextUtils.isEmpty(countyCode)) {
 			// 有县级代号时就去查询天气
@@ -104,6 +113,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			if (!TextUtils.isEmpty(weatherCode)) {
 				queryWeatherInfo(weatherCode);
 			}
+			LocationResult.setText(location.logMsg());
 			break;
 		default:
 			break;
@@ -184,5 +194,4 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		Intent intent = new Intent(this, AutoUpdateService.class);
 		startService(intent);
 	}
-	
 }
