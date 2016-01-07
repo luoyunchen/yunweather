@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yunweather.app.R;
-import com.yunweather.app.model.Location;
 import com.yunweather.app.service.AutoUpdateService;
 import com.yunweather.app.util.HttpCallbackListener;
 import com.yunweather.app.util.HttpUtil;
@@ -60,7 +59,6 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	
 	private TextView LocationResult;
 	
-	private Location location;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +111,6 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			if (!TextUtils.isEmpty(weatherCode)) {
 				queryWeatherInfo(weatherCode);
 			}
-			LocationResult.setText(location.logMsg());
 			break;
 		default:
 			break;
@@ -154,8 +151,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 					}
 				} else if ("weatherCode".equals(type)) {
 					// 处理服务器返回的天气信息
-					Utility.handleWeatherResponse(WeatherActivity.this,
-					response);
+					Utility.handleWeatherResponse(WeatherActivity.this, response);
 					runOnUiThread(new Runnable() {
 					@Override
 					public void run() {

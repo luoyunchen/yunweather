@@ -3,12 +3,15 @@ package com.yunweather.app.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.yunweather.app.db.YunWeatherOpenHelper;
-
+import android.R.bool;
+import android.R.integer;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.yunweather.app.activity.ChooseAreaActivity.AutoLocation;
+import com.yunweather.app.db.YunWeatherOpenHelper;
 
 public class YunWeatherDB {
 	/**
@@ -134,4 +137,53 @@ public class YunWeatherDB {
 		}
 		return list;
 	}
+	
+	/**
+	* 通过省的名字查询相应的省份ID。
+	*/
+	public void queryProvinces(Province locationProvince) {
+		Cursor cursor = db.query("Province", null, "province_name = ?", new String[] { locationProvince.getProvinceName() }, null, null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				locationProvince.setProvinceCode(cursor.getString(cursor.getColumnIndex("province_code")));
+				locationProvince.setId(cursor.getInt(cursor.getColumnIndex("id")));
+			} while (cursor.moveToNext());
+		}
+	}
+	
+	/**
+	* 通过市的名字查询相应的市ID。
+	*/
+	public void queryCitys(City locationCity) {
+		Cursor cursor = db.query("City", null, "city_name = ?", new String[] { locationCity.getCityName() }, null, null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				locationCity.setCityCode(cursor.getString(cursor.getColumnIndex("city_code")));
+				locationCity.setId(cursor.getInt(cursor.getColumnIndex("id")));
+			} while (cursor.moveToNext());
+		}
+	}
+	
+	/**
+	* 通过县/区的名字查询相应的ID。
+	*/
+	public void queryCounties(County locationCounty, City locationCity) {
+		Cursor cursor = db.query("County", null, "county_name = ?", new String[] { locationCounty.getCountyName() }, null, null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				locationCounty.setCountyCode(cursor.getString(cursor.getColumnIndex("county_code")));
+				locationCounty.setId(cursor.getInt(cursor.getColumnIndex("id")));
+			} while (cursor.moveToNext());
+		}else {
+			cursor = db.query("County", null, "county_name = ?", new String[] { locationCity.getCityName() }, null, null, null);
+			if (cursor.moveToFirst()) {
+				do {
+					locationCounty.setCountyCode(cursor.getString(cursor.getColumnIndex("county_code")));
+					locationCounty.setId(cursor.getInt(cursor.getColumnIndex("id")));
+				} while (cursor.moveToNext());
+			}
+		}
+	}
+	
+	
 }

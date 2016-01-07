@@ -56,6 +56,12 @@
 		<activity android:name="com.yunweather.app.activity.WeatherActivity">
 		</activity>
 		
+		<activity 
+		    android:name="com.yunweather.app.activity.LocationActivity"
+		    android:label="定位中..."
+		    android:theme="@style/location_dialog" >
+		</activity>
+		
 		<meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="vD8KnES0iGuSWnYSgMORRVmY" />       

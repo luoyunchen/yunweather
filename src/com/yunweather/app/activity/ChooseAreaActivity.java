@@ -3,6 +3,8 @@ package com.yunweather.app.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R.bool;
+import android.R.integer;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -68,6 +71,37 @@ public class ChooseAreaActivity extends Activity {
 	*/
 	private boolean isFromWeatherActivity;
 	
+	/**
+	* 纪录从百度得到的省，市，县或区的名称。
+	*/
+	public class AutoLocation {
+		private String provinceName;
+		private String cityName;
+		private String countyName;
+	}
+	
+	/**
+	* AutoLocation的引用。
+	*/
+	private AutoLocation autoLocation;
+	
+	/**
+	* 自动定位的省份
+	*/
+	private Province locationProvince;
+	/**
+	* 自动定位的的城市
+	*/
+	private City locationCity;
+	/**
+	* 自动定位的的县/区
+	*/
+	private County locationCounty;
+	/**
+	* 是否在自动定位中
+	*/
+	private boolean locationFlag = false;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,10 +114,6 @@ public class ChooseAreaActivity extends Activity {
 			return;
 		}
 		
-		Intent intent = new Intent(this, LocationActivity.class);
-		startActivity(intent);
-		finish();
-		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.choose_area);
 		listView = (ListView) findViewById(R.id.list_view);
@@ -91,6 +121,7 @@ public class ChooseAreaActivity extends Activity {
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataList);
 		listView.setAdapter(adapter);
 		yunWeatherDB = YunWeatherDB.getInstance(this);
+		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int index, long arg3) {
@@ -110,6 +141,69 @@ public class ChooseAreaActivity extends Activity {
 			}
 		});
 		queryProvinces(); // 加载省级数据
+		Log.d("cxw", "go to LocationActivity"); 
+		if (!isFromWeatherActivity) { //如果不是从WeatherActivity跳转过来的，就可以执行
+			Intent intent = new Intent(ChooseAreaActivity.this, LocationActivity.class);
+			startActivityForResult(intent, 1);
+		}
+	}
+	
+	/**
+	* 处理和解析从百度得来的数据，然后从服务器查询到county的ID，用于查询自动定位的城市天气
+	*/
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case 1:
+			if (resultCode == RESULT_OK) {
+				String returnedData = data.getStringExtra("data_return");
+				autoLocation = new AutoLocation();
+				handleAdrrResponse(returnedData, autoLocation);
+				locationFlag = true;
+				locationProvince = new Province();
+				locationCity = new City();
+				locationCounty = new County();
+				
+				locationProvince.setProvinceName(autoLocation.provinceName);
+				locationCity.setCityName(autoLocation.cityName);
+				locationCounty.setCountyName(autoLocation.countyName);
+				
+				yunWeatherDB.queryProvinces(locationProvince);
+				
+				selectedProvince = locationProvince;
+				queryFromServer(selectedProvince.getProvinceCode(), "city");					
+			}
+		break;
+			default:
+		}
+	}
+	
+	/**
+	* 解析和处理百度服务器返回的地址数据
+	*/
+	
+	public static void  handleAdrrResponse(String response, AutoLocation autoLocation) {
+		if (!TextUtils.isEmpty(response)) {
+			String[] allCounties = response.split("国");
+			if (!TextUtils.isEmpty(allCounties[1])) {
+				String[] Province = allCounties[1].split("省");
+				autoLocation.provinceName = Province[0];
+				if (!TextUtils.isEmpty(Province[1])) {
+					String[] City = Province[1].split("市");
+					autoLocation.cityName = City[0];
+					if (!TextUtils.isEmpty(City[1])) {
+						String[] County = City[1].split("县");
+						if (!TextUtils.isEmpty(County[0])) {
+							autoLocation.countyName = County[0];
+						}
+						County = City[1].split("区");
+						if (!TextUtils.isEmpty(County[0])) {
+							autoLocation.countyName = County[0];
+						}
+					} 
+				} 
+			}
+		}
 	}
 	
 	/**
@@ -187,8 +281,7 @@ public class ChooseAreaActivity extends Activity {
 				if ("province".equals(type)) {
 					result = Utility.handleProvincesResponse(yunWeatherDB, response);
 				} else if ("city".equals(type)) {
-					result = Utility.handleCitiesResponse(yunWeatherDB,
-							response, selectedProvince.getId());
+					result = Utility.handleCitiesResponse(yunWeatherDB, response, selectedProvince.getId());
 				} else if ("county".equals(type)) {
 					result = Utility.handleCountiesResponse(yunWeatherDB, response, selectedCity.getId());
 				}
@@ -201,8 +294,23 @@ public class ChooseAreaActivity extends Activity {
 							if ("province".equals(type)) {
 								queryProvinces();
 							} else if ("city".equals(type)) {
+								if (locationFlag) { //自动定位时，查询到对应城市信息，然后查询城市下的县/区信息
+									yunWeatherDB.queryCitys(locationCity);
+									Log.d("cxw", "cxdssfse" + locationCity.getCityCode());
+									selectedCity = locationCity;
+									queryFromServer(selectedCity.getCityCode(), "county");
+								}
 								queryCities();
 							} else if ("county".equals(type)) {
+								if (locationFlag) { //自动定位时，查询到对应县/区信息，把county_code传入WeatherActivity，并跳转
+									locationFlag = false;
+									yunWeatherDB.queryCounties(locationCounty, locationCity);
+									Log.d("cxw", "county_code=" + locationCounty.getCountyCode());
+									Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
+									intent.putExtra("county_code", locationCounty.getCountyCode());
+									startActivity(intent);
+									finish();		
+								}
 								queryCounties();
 							}
 						}
