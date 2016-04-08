@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -59,6 +60,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	
 	private TextView LocationResult;
 	
+	private ImageView weatherImage;
+	
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		currentDateText = (TextView) findViewById(R.id.current_date);
 		switchCity = (Button) findViewById(R.id.switch_city);
 		refreshWeather = (Button) findViewById(R.id.refresh_weather);
+		weatherImage = (ImageView) findViewById(R.id.image_weather);
+		weatherImage.setVisibility(View.INVISIBLE);
 		String countyCode = getIntent().getStringExtra("county_code");
 		
 		LocationResult = (TextView) findViewById(R.id.textView1);
@@ -177,12 +182,11 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	* 从SharedPreferences文件中读取存储的天气信息，并显示到界面上。
 	*/
 	private void showWeather() {
-		SharedPreferences prefs = PreferenceManager.
-		getDefaultSharedPreferences(this);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		cityNameText.setText( prefs.getString("city_name", ""));
 		temp1Text.setText(prefs.getString("temp1", ""));
 		temp2Text.setText(prefs.getString("temp2", ""));
-		weatherDespText.setText(prefs.getString("weather_desp", ""));
+		weatherDespText.setText(prefs.getString("weather_desp" + "cxw.......", ""));
 		publishText.setText("今天" + prefs.getString("publish_time", "") + "发布");
 		currentDateText.setText(prefs.getString("current_date", ""));
 		weatherInfoLayout.setVisibility(View.VISIBLE);
