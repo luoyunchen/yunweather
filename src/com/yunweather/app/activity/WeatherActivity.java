@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -58,7 +58,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	*/
 	private Button refreshWeather;
 	
-	private TextView LocationResult;
+	//private TextView LocationResult;
 	
 	private ImageView weatherImage;
 	
@@ -82,8 +82,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		weatherImage.setVisibility(View.INVISIBLE);
 		String countyCode = getIntent().getStringExtra("county_code");
 		
-		LocationResult = (TextView) findViewById(R.id.textView1);
-		LocationResult.setMovementMethod(ScrollingMovementMethod.getInstance());
+		//LocationResult = (TextView) findViewById(R.id.textView1);
+		//LocationResult.setMovementMethod(ScrollingMovementMethod.getInstance());
 		
 		
 		if (!TextUtils.isEmpty(countyCode)) {
@@ -134,7 +134,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	* 查询天气代号所对应的天气。
 	*/
 	private void queryWeatherInfo(String weatherCode) {
-		String address = "http://www.weather.com.cn/data/cityinfo/" + weatherCode + ".html";
+		String address = "http://wthrcdn.etouch.cn/weather_mini?citykey=" + weatherCode;
 		queryFromServer(address, "weatherCode");
 	}
 	
@@ -156,6 +156,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 					}
 				} else if ("weatherCode".equals(type)) {
 					// 处理服务器返回的天气信息
+					Log.d("cxw", "queryFromServer over!!!!!!!!!!!!!!!!!!");
 					Utility.handleWeatherResponse(WeatherActivity.this, response);
 					runOnUiThread(new Runnable() {
 					@Override
@@ -178,6 +179,19 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		});
 	}
 	
+	private void showWeatherPicture(String pic) {
+		if (pic.equals("晴")) {
+			weatherImage.getDrawable().setLevel(0);
+			weatherImage.setVisibility(View.VISIBLE);
+		}else if (pic.equals("多云")) {
+			weatherImage.getDrawable().setLevel(2);
+			weatherImage.setVisibility(View.VISIBLE);
+		}else if (pic.equals("小雨") || pic.equals("中雨")) {
+			weatherImage.getDrawable().setLevel(1);
+			weatherImage.setVisibility(View.VISIBLE);
+		}
+	}
+	
 	/**
 	* 从SharedPreferences文件中读取存储的天气信息，并显示到界面上。
 	*/
@@ -186,7 +200,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		cityNameText.setText( prefs.getString("city_name", ""));
 		temp1Text.setText(prefs.getString("temp1", ""));
 		temp2Text.setText(prefs.getString("temp2", ""));
-		weatherDespText.setText(prefs.getString("weather_desp" + "cxw.......", ""));
+		weatherDespText.setText(prefs.getString("weather_desp", ""));
+		showWeatherPicture(prefs.getString("weather_desp", ""));
 		publishText.setText("今天" + prefs.getString("publish_time", "") + "发布");
 		currentDateText.setText(prefs.getString("current_date", ""));
 		weatherInfoLayout.setVisibility(View.VISIBLE);
