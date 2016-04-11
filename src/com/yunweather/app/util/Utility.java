@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.yunweather.app.model.City;
 import com.yunweather.app.model.County;
@@ -22,22 +24,45 @@ public class Utility {
 	/**
 	* 解析服务器返回的JSON数据，并将解析出的数据存储到本地。
 	*/
+	/* 中国天气网数据解析  */
+//	public static void handleWeatherResponse(Context context, String response) {
+//		try {
+//			JSONObject jsonObject = new JSONObject(response);
+//			JSONObject weatherInfo = jsonObject.getJSONObject("weatherinfo");
+//			String cityName = weatherInfo.getString("city");
+//			String weatherCode = weatherInfo.getString("cityid");
+//			String temp1 = weatherInfo.getString("temp1");
+//			String temp2 = weatherInfo.getString("temp2");
+//			String weatherDesp = weatherInfo.getString("weather");
+//			
+//			String publishTime = weatherInfo.getString("ptime");
+//			saveWeatherInfo(context, cityName, weatherCode, temp1, temp2, weatherDesp, publishTime);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//	}
+	
+	/* 随身云数据解析 */
 	public static void handleWeatherResponse(Context context, String response) {
-		try {
-			JSONObject jsonObject = new JSONObject(response);
-			JSONObject weatherInfo = jsonObject.getJSONObject("weatherinfo");
-			String cityName = weatherInfo.getString("city");
-			String weatherCode = weatherInfo.getString("cityid");
-			String temp1 = weatherInfo.getString("temp1");
-			String temp2 = weatherInfo.getString("temp2");
-			String weatherDesp = weatherInfo.getString("weather");
-			
-			String publishTime = weatherInfo.getString("ptime");
-			saveWeatherInfo(context, cityName, weatherCode, temp1, temp2, weatherDesp, publishTime);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+	try {
+		JSONObject jsonObject = new JSONObject(response);
+		JSONObject weatherInfo = jsonObject.getJSONObject("data"); 
+		String cityName = weatherInfo.getString("city");
+		String weatherCode = "1000";
+		
+		String forecast = weatherInfo.getString("forecast");
+		JSONArray jsonArray = new JSONArray(forecast);
+		JSONObject jsonObject1 = jsonArray.getJSONObject(0);
+		
+		String temp1 = jsonObject1.getString("high");
+		String temp2 = jsonObject1.getString("low");
+		String weatherDesp = jsonObject1.getString("type");
+		String publishTime = "18:10";
+		saveWeatherInfo(context, cityName, weatherCode, temp1, temp2, weatherDesp, publishTime);
+	} catch (JSONException e) {
+		e.printStackTrace();
 	}
+}
 	
 	/**
 	* 将服务器返回的所有天气信息存储到SharedPreferences文件中。
