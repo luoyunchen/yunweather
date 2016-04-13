@@ -50,15 +50,15 @@ public class Utility {
 		String cityName = weatherInfo.getString("city");
 		String weatherCode = "1000";
 		
-		String forecast = weatherInfo.getString("forecast");
-		JSONArray jsonArray = new JSONArray(forecast);
-		JSONObject jsonObject1 = jsonArray.getJSONObject(0);
+		String forecastData = weatherInfo.getString("forecast");
+		JSONArray jsonArray = new JSONArray(forecastData);
+		JSONObject weatherData0 = jsonArray.getJSONObject(0);
 		
-		String temp1 = jsonObject1.getString("high");
-		String temp2 = jsonObject1.getString("low");
-		String weatherDesp = jsonObject1.getString("type");
-		String publishTime = "18:10";
-		saveWeatherInfo(context, cityName, weatherCode, temp1, temp2, weatherDesp, publishTime);
+		String temp1 = weatherData0.getString("high").substring(2);
+		String temp2 = weatherData0.getString("low").substring(3);
+		String weatherDesp = weatherData0.getString("type");
+		String[] date = weatherData0.getString("date").split("日");
+		saveWeatherInfo(context, cityName, weatherCode, temp1, temp2, weatherDesp, date[1]);
 	} catch (JSONException e) {
 		e.printStackTrace();
 	}
@@ -67,8 +67,25 @@ public class Utility {
 	/**
 	* 将服务器返回的所有天气信息存储到SharedPreferences文件中。
 	*/
+	/* 中国天气网数据保方法  */
+//	public static void saveWeatherInfo(Context context, String cityName,
+//	String weatherCode, String temp1, String temp2, String weatherDesp, String publishTime) {
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
+//		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+//		editor.putBoolean("city_selected", true);
+//		editor.putString("city_name", cityName);
+//		editor.putString("weather_code", weatherCode);
+//		editor.putString("temp1", temp1);
+//		editor.putString("temp2", temp2);
+//		editor.putString("weather_desp", weatherDesp);
+//		editor.putString("publish_time", publishTime);
+//		editor.putString("current_date", sdf.format(new Date()));
+//		editor.commit();
+//	}
+	
+	/* 随身云天气数据保方法  */
 	public static void saveWeatherInfo(Context context, String cityName,
-	String weatherCode, String temp1, String temp2, String weatherDesp, String publishTime) {
+	String weatherCode, String temp1, String temp2, String weatherDesp, String date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
 		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
 		editor.putBoolean("city_selected", true);
@@ -77,8 +94,7 @@ public class Utility {
 		editor.putString("temp1", temp1);
 		editor.putString("temp2", temp2);
 		editor.putString("weather_desp", weatherDesp);
-		editor.putString("publish_time", publishTime);
-		editor.putString("current_date", sdf.format(new Date()));
+		editor.putString("current_date", sdf.format(new Date())+ " " + date);
 		editor.commit();
 	}
 	
