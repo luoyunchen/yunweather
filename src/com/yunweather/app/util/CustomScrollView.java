@@ -132,6 +132,22 @@ public class CustomScrollView extends ViewGroup {
 		return mCurrentScreen; 
 	} 
 	
+	/** 
+	* 当滑动后的当前页码 
+	*/ 
+	public int getPage() { 
+		return Configure.curentPage; 
+	} 
+	  
+	  
+	public void setToScreen(int whichScreen) { 
+		whichScreen = Math.max(0, Math.min(whichScreen, getChildCount() - 1)); 
+		mCurrentScreen = whichScreen; 
+		///scrollTo(whichScreen * getWidth(), 0); 
+		scrollTo(0,whichScreen * getHeight() ); 
+	} 
+  
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) { 
 	  

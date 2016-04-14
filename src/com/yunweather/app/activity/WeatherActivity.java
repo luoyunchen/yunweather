@@ -223,7 +223,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	
 
 	private void setupView() { 
-		scrollView = (CustomScrollView) findViewById(R.id.customdview); 
+		scrollView = (CustomScrollView) findViewById(R.id.definedview); 
 		mTextView = (TextView) findViewById(R.id.text_page); 
 		pageCount = 2;
 	  
