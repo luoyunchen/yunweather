@@ -2,12 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:background="@drawable/background_pic" 
 	android:orientation="vertical" >
 	
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="50dp"
-		android:background="#484E61" >
+		android:layout_alignParentTop="true"
+		android:background="#1f000000" >
 		
 	    <Button
 			android:id="@+id/switch_city"
@@ -39,8 +41,7 @@
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		android:layout_weight="1"
-		android:background="@drawable/background_pic" >
+		android:layout_weight="1" >
 		
 		<TextView
 			android:id="@+id/publish_text"
