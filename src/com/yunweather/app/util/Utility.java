@@ -94,7 +94,7 @@ public class Utility {
 		editor.putString("temp1", temp1);
 		editor.putString("temp2", temp2);
 		editor.putString("weather_desp", weatherDesp);
-		editor.putString("current_date", sdf.format(new Date())+ " " + date);
+		editor.putString("current_date", sdf.format(new Date()).substring(5)+ " " + date);
 		editor.commit();
 	}
 	

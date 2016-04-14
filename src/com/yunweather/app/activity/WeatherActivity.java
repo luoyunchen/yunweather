@@ -14,6 +14,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yunweather.app.R;
@@ -24,7 +25,7 @@ import com.yunweather.app.util.HttpUtil;
 import com.yunweather.app.util.Utility;
 
 public class WeatherActivity extends Activity implements OnClickListener{
-	private LinearLayout weatherInfoLayout;
+	private RelativeLayout weatherInfoLayout;
 	/**
 	* 用于显示城市名
 	* 
@@ -80,7 +81,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		
 		//setContentView(R.layout.weather_layout);
 		// 初始化各控件
-		weatherInfoLayout = (LinearLayout)findViewById(R.id.weather_info_layout);
+		weatherInfoLayout = (RelativeLayout)findViewById(R.id.weather_info_layout);
 		cityNameText = (TextView) findViewById(R.id.city_name);
 		publishText = (TextView) findViewById(R.id.publish_text);
 		weatherDespText = (TextView) findViewById(R.id.weather_desp);
@@ -234,7 +235,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			inflater = this.getLayoutInflater(); 
 		  
 			if (i == 0) { 
-				final View addview = inflater.inflate( R.layout.weather_layout, null); 
+				final View addview = inflater.inflate( R.layout.weather_info_main, null); 
 				mLinearLayout = new LinearLayout(this); 
 				mLinearLayout.addView(addview, param); 
 				scrollView.addView(mLinearLayout); 
