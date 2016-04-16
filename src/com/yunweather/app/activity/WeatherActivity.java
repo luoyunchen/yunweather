@@ -40,13 +40,13 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	*/
 	private TextView weatherDespText;
 	/**
-	* 用于显示气温1
+	* 用于显示今天气温
 	*/
 	private TextView temp1Text;
 	/**
-	* 用于显示气温2
+	* 用于显示明天气温
 	*/
-	private TextView temp2Text;
+	private TextView day2Text;
 	/**
 	* 用于显示当前日期
 	*/
@@ -63,6 +63,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	//private TextView LocationResult;
 	
 	private ImageView weatherImage;
+	
+	private TextView cruTemp;
 	
 	private CustomScrollView scrollView;
 	private TextView mTextView;
@@ -86,7 +88,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		publishText = (TextView) findViewById(R.id.publish_text);
 		weatherDespText = (TextView) findViewById(R.id.weather_desp);
 		temp1Text = (TextView) findViewById(R.id.temp1);
-		temp2Text = (TextView) findViewById(R.id.temp2);
+		cruTemp   = (TextView) findViewById(R.id.temp_cur);
+		day2Text = (TextView) findViewById(R.id.text_day2);
 		currentDateText = (TextView) findViewById(R.id.current_date);
 		switchCity = (Button) findViewById(R.id.switch_city);
 		refreshWeather = (Button) findViewById(R.id.refresh_weather);
@@ -210,12 +213,13 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	private void showWeather() {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		cityNameText.setText( prefs.getString("city_name", ""));
-		temp1Text.setText(prefs.getString("temp1", ""));
-		temp2Text.setText(prefs.getString("temp2", ""));
-		weatherDespText.setText(prefs.getString("weather_desp", ""));
-		showWeatherPicture(prefs.getString("weather_desp", ""));
+		temp1Text.setText(prefs.getString("tempLow0", "") + " ~" + prefs.getString("tempHigh0", ""));
+		day2Text.setText("明天 " + prefs.getString("tempLow1", "") + " ~" + prefs.getString("tempHigh1", ""));
+		cruTemp.setText(prefs.getString("temp_cur", "")+ "°");
+		weatherDespText.setText(prefs.getString("weatherConditions0", ""));
+		showWeatherPicture(prefs.getString("weatherConditions0", ""));
 		publishText.setText("今天发布");
-		currentDateText.setText(prefs.getString("current_date", ""));
+		currentDateText.setText(prefs.getString("weatherDate0", ""));
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
 		Intent intent = new Intent(this, AutoUpdateService.class);

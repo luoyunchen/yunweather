@@ -17,6 +17,7 @@ import android.util.Log;
 import com.yunweather.app.model.City;
 import com.yunweather.app.model.County;
 import com.yunweather.app.model.Province;
+import com.yunweather.app.model.WeatherInfo;
 import com.yunweather.app.model.YunWeatherDB;
 
 public class Utility {
@@ -45,20 +46,35 @@ public class Utility {
 	/* 随身云数据解析 */
 	public static void handleWeatherResponse(Context context, String response) {
 	try {
+		WeatherInfo[] weatherArray = new WeatherInfo[5];
+		
 		JSONObject jsonObject = new JSONObject(response);
 		JSONObject weatherInfo = jsonObject.getJSONObject("data"); 
 		String cityName = weatherInfo.getString("city");
+		String tempCru = weatherInfo.getString("wendu");
 		String weatherCode = "1000";
 		
 		String forecastData = weatherInfo.getString("forecast");
 		JSONArray jsonArray = new JSONArray(forecastData);
-		JSONObject weatherData0 = jsonArray.getJSONObject(0);
+		for (int i=0; i < jsonArray.length(); i++) {
+			JSONObject weatherData = jsonArray.getJSONObject(i);
+			weatherArray[i] = new WeatherInfo();
+			Log.d("cxw", "wind..........." + "................." + i);
+			Log.d("cxw", "wind..........." + weatherData.getString("fengxiang"));
+			String a = weatherData.getString("fengxiang");
+			weatherArray[i].setWindDirection(a);
+			Log.d("cxw", "wind..........." + "....fengli............" + i);
+			//Log.d("cxw", "wind....#......." + weatherData.getString("fengli"));
+			weatherArray[i].setWindForce(weatherData.getString("fengli"));
+			weatherArray[i].setTempHigh(weatherData.getString("high").substring(2));
+			Log.d("cxw", "wind..........." + "....temp high............" + weatherData.getString("high").substring(2));
+			weatherArray[i].setTempLow(weatherData.getString("low").substring(3));
+			weatherArray[i].setWeatherConditions(weatherData.getString("type"));
+			weatherArray[i].setWeatherDate(weatherData.getString("date").split("日")[1]);
+		}
+		Log.d("cxw", "wind..........." + "....fengli............ over ");
 		
-		String temp1 = weatherData0.getString("high").substring(2);
-		String temp2 = weatherData0.getString("low").substring(3);
-		String weatherDesp = weatherData0.getString("type");
-		String[] date = weatherData0.getString("date").split("日");
-		saveWeatherInfo(context, cityName, weatherCode, temp1, temp2, weatherDesp, date[1]);
+		saveWeatherInfo(context, cityName, weatherCode,tempCru, weatherArray);
 	} catch (JSONException e) {
 		e.printStackTrace();
 	}
@@ -85,16 +101,24 @@ public class Utility {
 	
 	/* 随身云天气数据保方法  */
 	public static void saveWeatherInfo(Context context, String cityName,
-	String weatherCode, String temp1, String temp2, String weatherDesp, String date) {
+	String weatherCode, String tempCru, WeatherInfo[] weatherArray) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
 		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
 		editor.putBoolean("city_selected", true);
 		editor.putString("city_name", cityName);
 		editor.putString("weather_code", weatherCode);
-		editor.putString("temp1", temp1);
-		editor.putString("temp2", temp2);
-		editor.putString("weather_desp", weatherDesp);
-		editor.putString("current_date", sdf.format(new Date()).substring(5)+ " " + date);
+		editor.putString("temp_cur", tempCru);
+		Log.d("cxw", "saveWeatherInfo.......");
+		for (int i=0; i<weatherArray.length; i++) {
+			Log.d("cxw", "wind..........." + weatherArray[i].getWindDirection());
+			editor.putString("windDirection"+ i, weatherArray[i].getWindDirection());
+			editor.putString("windForce"+ i, weatherArray[i].getWindForce());
+			editor.putString("tempHigh"+ i, weatherArray[i].getTempHigh());
+			editor.putString("tempLow"+ i, weatherArray[i].getTempLow());
+			editor.putString("weatherConditions"+ i, weatherArray[i].getWeatherConditions());
+			editor.putString("weatherDate"+ i, sdf.format(new Date()).substring(5)+ " " + weatherArray[i].getWeatherDate());
+		}
+		Log.d("cxw", "saveWeatherInfo.......over..............");
 		editor.commit();
 	}
 	
